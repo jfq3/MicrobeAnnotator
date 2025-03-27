@@ -46,7 +46,7 @@ logger = setup_logger(__name__)
 # Define functions
 # ==============================================================================
 # Function to coordinate the download and building of databases
-def database_duilder(
+def database_builder(
     database_directory: Path,
     method: str,
     light: bool,
@@ -55,6 +55,7 @@ def database_duilder(
     single_step: bool,
     aspera: bool,
     keep_temp: bool,
+    excludetrembl: bool,
     binary_path: Path = None
 ) -> None:
     """[summary]
@@ -88,7 +89,7 @@ def database_duilder(
         database_files['KO_profiles'] = str(ko_profiles_path)
         database_files['KO_profile_metadata'] = str(ko_profile_metadata)
         if single_step:
-            step = 15
+            step = 14
         else:
             step += 1
     # Process KOfam profiles
@@ -96,7 +97,7 @@ def database_duilder(
         logger.info(f"Step 2")
         kofam.kofam_formatter(ko_profiles_path)
         if single_step:
-            step = 15
+            step = 14
         else:
             step += 1
     # Download Swissprot Proteins
@@ -105,7 +106,7 @@ def database_duilder(
         swissprot_fasta = uniprot.swissprot_fasta_downloader(database_directory)
         database_files['Swissprot_Fasta'] = str(swissprot_fasta)
         if single_step:
-            step = 15
+            step = 14
         else:
             step += 1
     # Download Swissprot Annotations
@@ -114,7 +115,7 @@ def database_duilder(
         swissprot_dat = uniprot.swissprot_dat_downloader(database_directory)
         database_files['Swissprot_annotations'] = str(swissprot_dat)
         if single_step:
-            step = 15
+            step = 14
         else:
             step += 1
     # Parse Swissprot Annotations
@@ -130,7 +131,7 @@ def database_duilder(
             swissprot_dat, final_sprot_table)
         database_files['Swissprot_annotation_table'] = str(final_sprot_table)
         if single_step:
-            step = 15
+            step = 14
         elif light:
             step = 12
         else:
@@ -138,22 +139,27 @@ def database_duilder(
     # Download TrEMBL Proteins
     if step == 6:
         logger.info(f"Step 6")
-        trembl_fasta = uniprot.trembl_fasta_downloader(database_directory)
-        database_files['TrEMBL_Fasta'] = str(trembl_fasta)
+        if excludetrembl:
+            logger.info("Skipping trEMBL steps (6-8)")
+        else:
+            trembl_fasta = uniprot.trembl_fasta_downloader(database_directory)
+            database_files['TrEMBL_Fasta'] = str(trembl_fasta)
         if single_step:
-            step = 15
+            step = 14
+        elif excludetrembl:
+            step = 9
         else:
             step += 1
-    # Download TrEMBL Annotations
+    # Download TrEMBL Annotations 
     if step == 7:
         logger.info(f"Step 7")
         trembl_dat = uniprot.trembl_dat_downloader(database_directory)
         database_files['TrEMBL_annotations'] = str(trembl_dat)
         if single_step:
-            step = 15
+            step = 14
         else:
             step += 1
-    # Parse TrEMBL Annotations
+    # Parse TrEMBL Annotations # Stopped editing here, = line 162
     if step == 8:
         logger.info(f"Step 8")
         try:
