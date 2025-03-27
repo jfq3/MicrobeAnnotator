@@ -438,7 +438,7 @@ def main():
     keep_temp = arguments.keep_temp
     single_step = arguments.single_step
     # Run functions
-    database_duilder(
+    database_builder(
         database, method, light, threads, step,
         single_step, aspera, keep_temp, bin_path)
 # ==============================================================================
