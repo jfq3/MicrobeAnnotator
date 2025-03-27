@@ -58,7 +58,7 @@ def refseq_fasta_downloader(
     logger.info("Downloading protein fasta files using Aspera Connect.")
     # Get aspera ssh key
     if ascp_key == None:
-        ascp_key = get_aspera_key()
+        ascp_key = "~/.aspera/connect/etc/asperaweb_id_dsa.openssh" # replaced get_aspera_key()
     # Create required folders
     temp_fasta_files = output_file_folder / "temp_refseq_proteins"
     merged_db_folder = output_file_folder / "protein_db"
