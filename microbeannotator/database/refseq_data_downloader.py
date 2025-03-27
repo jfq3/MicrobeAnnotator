@@ -183,7 +183,7 @@ def refseq_genbank_downloader(
     logger.info("Downloading protein genbank files using Aspera Connect.")
     # Get aspera ssh key
     if ascp_key == None:
-        ascp_key = get_aspera_key()
+        ascp_key = "~/.aspera/connect/etc/asperaweb_id_dsa.openssh"  # replaced get_aspera_key()
     # Make output folder
     temp_gb_dir = output_file_folder / "temp_genbank"
     temp_gb_dir.mkdir(parents=True, exist_ok=True)
